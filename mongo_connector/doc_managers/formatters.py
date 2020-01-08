@@ -84,7 +84,7 @@ class DefaultDocumentFormatter(DocumentFormatter):
             # Just include body of binary data without subtype
             return base64.b64encode(value).decode()
         elif isinstance(value, UUID):
-            return value.hex
+            return value
         elif isinstance(value, (int, long, float)):
             if isnan(value):
                 raise ValueError("nan")
@@ -92,7 +92,10 @@ class DefaultDocumentFormatter(DocumentFormatter):
                 raise ValueError("inf")
             return value
         elif isinstance(value, datetime.datetime):
-            return value
+            if type(value) == datetime.datetime:
+                return value.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            if type(value) == datetime.date:
+                return value.strftime("%Y-%m-%d")
         elif value is None:
             return value
         # Default
